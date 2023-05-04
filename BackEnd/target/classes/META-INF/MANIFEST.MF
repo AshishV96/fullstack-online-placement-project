@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Built-By: Ashish
+Build-Jdk: 11.0.17
+Implementation-Title: jobportal
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.project
+Implementation-URL: https://spring.io/projects/spring-boot/jobportal
+Created-By: Maven Integration for Eclipse
+
