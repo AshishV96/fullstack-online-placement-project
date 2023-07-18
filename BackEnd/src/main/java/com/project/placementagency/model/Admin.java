@@ -1,13 +1,13 @@
 package com.project.placementagency.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import net.bytebuddy.dynamic.loading.ClassReloadingStrategy.Strategy;
 
-@Entity
+@jakarta.persistence.Entity
 public class Admin {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
