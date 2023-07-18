@@ -5,8 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import net.bytebuddy.dynamic.loading.ClassReloadingStrategy.Strategy;
-
 @jakarta.persistence.Entity
 public class Admin {
 
