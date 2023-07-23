@@ -9,17 +9,23 @@ import UserProfile from './components/User/UserProfile';
 import UserProfileUpdate from './components/User/UserProfileUpdate';
 import ForgetPassword from './components/ForgetPassword';
 import JobList from './components/User/JobList';
+import OTPPage from './components/OTPPage';
+import ParentComponent from './test/ParentComponent';
+import ChildComponent from './test/ChildComponent';
 
 function App() {
   return (
     <div>
       <Router>
       <Routes>
+      <Route path ="/parent" element={<ParentComponent/>} />
+      <Route path ="/child" element={<ChildComponent/>} />
       <Route path ="/" element={<Caro/>} />
       <Route path ="/login" element={<Login />} />
       <Route path ="/forgetPassword" element={<ForgetPassword />} />
       <Route path ="/register" element={<Register />} />
       <Route path ="/user" element={<Protected Cmp={UserDashboard} />} />
+      <Route path ="/user/OTP" element={<OTPPage/>} />
       <Route path ="/user/profile" element={<Protected Cmp={UserProfile} />}/>
       <Route path ="/user/profile/update" element={<Protected Cmp={UserProfileUpdate} />}/>
       <Route path ="/user/jobs" element={<JobList />} />

@@ -23,6 +23,7 @@ public class UserServiceImplementation implements UserService {
 	
 	@Autowired
 	private UserRepository repo;
+
 	
 	public UserStatus addUser(User userDetails) {
 		// TODO Auto-generated method stub
