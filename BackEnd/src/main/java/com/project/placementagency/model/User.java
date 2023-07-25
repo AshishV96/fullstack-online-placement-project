@@ -36,19 +36,19 @@ import lombok.ToString;
 public class User {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int userId;
+	private Integer userId;
 	@Column(unique = true, length = 50)
 	private String email;
 	private String password;
 	private String firstName;
 	private String lastName;
-	private int age;
+	private Integer age;
 	@Column(length = 10)
 	private String gender;
 	private String address;
 	private String qualification;
 //	@Column(unique = true)
-	private double contactNo;
+	private Double contactNo;
 	
 //	@OneToOne
 //	@JoinColumn(name = "jid")

@@ -10,12 +10,13 @@ import com.project.placementagency.model.AppliedJobs;
 import com.project.placementagency.model.Employer;
 import com.project.placementagency.model.Job;
 import com.project.placementagency.model.User;
+import com.project.placementagency.model.UserDTO;
 import com.project.placementagency.model.UserStatus;
 
 @Service
 public interface UserService {
 
-	UserStatus addUser(User userDetails);
+	UserDTO addUser(UserDTO userDetails);
 
 	UserStatus getUser(String email,String password);
 

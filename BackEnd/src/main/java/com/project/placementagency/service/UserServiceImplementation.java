@@ -14,6 +14,7 @@ import com.project.placementagency.model.AppliedJobs;
 import com.project.placementagency.model.Employer;
 import com.project.placementagency.model.Job;
 import com.project.placementagency.model.User;
+import com.project.placementagency.model.UserDTO;
 import com.project.placementagency.model.UserStatus;
 
 
@@ -25,19 +26,13 @@ public class UserServiceImplementation implements UserService {
 	private UserRepository repo;
 
 	
-	public UserStatus addUser(User userDetails) {
-		// TODO Auto-generated method stub
-		UserStatus userStatus =new UserStatus(0,new User(),"User not added");
-		if(!repo.existsByEmail(userDetails.getEmail()))
-		{
-		System.out.println(userDetails.getUserId());
-		repo.save(userDetails);
-		System.out.println(userDetails.getUserId());
-		userStatus.setUser(userDetails);
-		userStatus.setStatuscode(1);
-		userStatus.setStatusmessage("added user details");
-		}
-		return userStatus;
+	public UserDTO addUser(UserDTO userDetails) {
+		
+		if(repo.existsByEmail(userDetails.getEmail()))
+			return null;
+
+		else
+			return new UserDTO(repo.save(userDetails.getUser()));
 	}
 
 	@Override

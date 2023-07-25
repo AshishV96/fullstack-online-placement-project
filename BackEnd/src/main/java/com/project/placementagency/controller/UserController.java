@@ -24,6 +24,7 @@ import com.project.placementagency.model.AppliedJobs;
 import com.project.placementagency.model.Employer;
 import com.project.placementagency.model.Job;
 import com.project.placementagency.model.User;
+import com.project.placementagency.model.UserDTO;
 import com.project.placementagency.model.UserStatus;
 import com.project.placementagency.service.EmailSenderService;
 import com.project.placementagency.service.UserService;
@@ -52,22 +53,20 @@ public class UserController {
 	@PostMapping("/send")
 	public ResponseEntity<String> sendEmail(@RequestParam(name = "mailId") String mailId,@RequestBody Long OTP) throws MessagingException
 	{
-		mailSender.sendEmail(mailId, "OTP to login to the portal", String.valueOf(OTP));
+		mailSender.sendEmail(mailId, "OTP to register to the portal", String.valueOf(OTP));
 		return new ResponseEntity<String>("OTP sent", HttpStatus.OK);
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<UserStatus> addUser(@RequestBody User userDetails) 
+	public ResponseEntity<String> addUser(@RequestBody UserDTO userDetails) 
 	{
 		System.out.println("update controller function got input as " + userDetails.getUserId());
 		
-		ResponseEntity<UserStatus> re=null;
-		UserStatus x = service.addUser(userDetails);
-		if(x.getStatuscode() == 0)
-			re = new ResponseEntity<UserStatus>(x,HttpStatus.NOT_FOUND);
+		UserDTO userDTO = service.addUser(userDetails);
+		if(userDTO==null)
+			return new ResponseEntity<String>("EmailId already registered",HttpStatus.BAD_REQUEST);
 		else
-			re = new ResponseEntity<UserStatus>(x,HttpStatus.OK);
-		return re;
+			return new ResponseEntity<String>("User registered with ID:: "+userDTO.getUserId(),HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/get/{email}/{password}")
