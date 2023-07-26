@@ -3,6 +3,7 @@ package com.project.placementagency.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,17 +38,19 @@ public class User {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userId;
-	@Column(unique = true, length = 50)
+	@Column(unique = true, length = 35)
 	private String email;
 	private String password;
 	private String firstName;
 	private String lastName;
+	@Column(nullable = true)
 	private Integer age;
 	@Column(length = 10)
 	private String gender;
 	private String address;
 	private String qualification;
 //	@Column(unique = true)
+	@Column(nullable = true)
 	private Double contactNo;
 	
 //	@OneToOne

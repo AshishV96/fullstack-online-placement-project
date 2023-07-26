@@ -12,8 +12,8 @@ function Register() {
     const history = useNavigate();
     
     const [sentOTP, setSentOTP] = useState(false);
+    
     const [OTP,setOTP] = useState('');
-    // const OTPGen = Math.floor(100000 + Math.random() * 900000)
 
     const [reqOTP, setReqOTP] = useState('')
 
@@ -46,8 +46,9 @@ function Register() {
             return
         }
 
-        setOTP(456722);
-        console.log(OTP)
+        const OTPGen = Math.floor(100000 + Math.random() * 900000).toString()
+        setOTP(OTPGen)
+        console.log(OTPGen)
         console.warn(item)
 
         let resp = await fetch("/user/send?mailId=" + email, {
@@ -56,7 +57,7 @@ function Register() {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            body: OTP
+            body: OTPGen
         });
 
         if (resp.ok) {

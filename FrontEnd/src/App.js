@@ -12,6 +12,7 @@ import JobList from './components/User/JobList';
 // import OTPPage from './components/OTPPage';
 import ParentComponent from './test/ParentComponent';
 import ChildComponent from './test/ChildComponent';
+import Test from './components/Test';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Route path ="/login" element={<Login />} />
       <Route path ="/forgetPassword" element={<ForgetPassword />} />
       <Route path ="/register" element={<Register />} />
+      <Route path ="/test" element={<Test />} />
       <Route path ="/user" element={<Protected Cmp={UserDashboard} />} />
       {/* <Route path ="/user/OTP" element={<OTPPage/>} /> */}
       <Route path ="/user/profile" element={<Protected Cmp={UserProfile} />}/>

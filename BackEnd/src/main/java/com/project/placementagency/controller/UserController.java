@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +45,10 @@ public class UserController {
 	
 	@Autowired
 	private UserRepository repo;
-	
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+
 	@GetMapping("/use")
 	public void use()
 	{
@@ -59,9 +64,8 @@ public class UserController {
 	
 	@PostMapping("/add")
 	public ResponseEntity<String> addUser(@RequestBody UserDTO userDetails) 
-	{
-		System.out.println("update controller function got input as " + userDetails.getUserId());
-		
+	{		
+		userDetails.setPassword(passwordEncoder.encode(userDetails.getPassword()));
 		UserDTO userDTO = service.addUser(userDetails);
 		if(userDTO==null)
 			return new ResponseEntity<String>("EmailId already registered",HttpStatus.BAD_REQUEST);
