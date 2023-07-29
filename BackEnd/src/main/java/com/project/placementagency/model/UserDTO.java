@@ -67,7 +67,7 @@ public class UserDTO {
         if(user.getJobs()!=null)user.getJobs().stream().forEach(job->this.jobs.add(new JobDTO(job)));
     }
 
-    public User getUser()
+    public User get()
     {
         User user = new User();
         user.setUserId(this.userId);

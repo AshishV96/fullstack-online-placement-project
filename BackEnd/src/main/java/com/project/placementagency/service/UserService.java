@@ -2,6 +2,7 @@ package com.project.placementagency.service;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import com.project.placementagency.model.Admin;
@@ -14,17 +15,19 @@ import com.project.placementagency.model.UserDTO;
 import com.project.placementagency.model.UserStatus;
 
 @Service
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
 	UserDTO addUser(UserDTO userDetails);
 
-	UserStatus getUser(String email,String password);
+	UserDTO getUser(UserDTO userDetails);
 
 	UserStatus updateUser(User userDetails);
 
 	List<AppliedJobs> getAppliedJobs(int uid);
 
 	List<AppliedJobs> getAllJobs();
+
+    boolean existByEmail(String email);
 	
 //	UserStatus addUserJob(int uid, int jid);
 		

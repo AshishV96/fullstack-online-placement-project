@@ -19,6 +19,8 @@ import com.project.placementagency.model.User;
 public interface UserRepository extends CrudRepository<User, Integer>{
 
 	Optional<User> findOneByEmailIgnoreCaseAndPassword(String email,String password);
+
+	Optional<User> findOneByEmailIgnoreCase(String email);
 	
 //	@Modifying
 //	@Query(value = "insert into user_jobs values(:uid,:jid)",nativeQuery = true)

@@ -6,8 +6,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.project.placementagency.dao.AdminRepository;
 import com.project.placementagency.dao.UserRepository;
@@ -22,10 +26,8 @@ import com.project.placementagency.model.UserStatus;
 @Service
 public class UserServiceImplementation implements UserService {
 
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Autowired
 	private UserRepository repo;
@@ -36,20 +38,28 @@ public class UserServiceImplementation implements UserService {
 			return null;
 
 		else
-			return new UserDTO(repo.save(userDetails.getUser()));
+			return new UserDTO(repo.save(userDetails.get()));
 	}
 
 	@Override
-	public UserStatus getUser(String email, String password) {
+	public UserDTO getUser(UserDTO userDetails) {
 
-		UserStatus userStatus = new UserStatus(0, new User(), "User not found");
-		Optional<User> x = repo.findOneByEmailIgnoreCaseAndPassword(email, password);
+		Optional<User> x = repo.findOneByEmailIgnoreCase(userDetails.getEmail());
 		if (x.isPresent()) {
-			userStatus.setUser(x.get());
-			userStatus.setStatuscode(1);
-			userStatus.setStatusmessage("User details found");
+			if(passwordEncoder.matches(userDetails.getPassword(), x.get().getPassword()))
+			return new UserDTO(x.get());
+			else
+			return null;
 		}
-		return userStatus;
+		else
+			return null;
+
+	}
+
+	@Override
+	public boolean existByEmail(String email) {
+		// TODO Auto-generated method stub
+		return repo.existsByEmail(email);
 	}
 
 	// @Override
@@ -101,6 +111,12 @@ public class UserServiceImplementation implements UserService {
 			x = null;
 
 		return x;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'loadUserByUsername'");
 	}
 
 }

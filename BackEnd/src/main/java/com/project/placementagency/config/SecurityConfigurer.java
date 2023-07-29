@@ -11,27 +11,32 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurer {
-    
+
     @Bean
-   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-       http.csrf().disable()
-               .authorizeHttpRequests()
-               .antMatchers(UrlMapping.AUTH + UrlMapping.SIGN_UP).permitAll()
-               .antMatchers(UrlMapping.AUTH + UrlMapping.LOGIN).permitAll()
-               .antMatchers(UrlMapping.VALIDATE_JWT).permitAll()
-               .antMatchers("/api/test/**").permitAll()
-               .anyRequest().authenticated();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    //    http.addFilterBefore(authenticationJwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.csrf(c -> c.disable())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/user/add/*").permitAll()
+                        .requestMatchers("/user/sendOTP").permitAll()
+                        .requestMatchers("/user/check/*").permitAll()
+                        .requestMatchers("/user/get").permitAll()
+                        .requestMatchers("/admin/login").permitAll()
+                        .requestMatchers("/employer/login").permitAll()
+                        .anyRequest().authenticated())
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-       return http.build();
-   }
+        // http.addFilterBefore(authenticationJwtTokenFilter,
+        // UsernamePasswordAuthenticationFilter.class);
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeHttpRequests().antMatchers("/person/authenticate")
-                .permitAll().anyRequest().authenticated().and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
+
+    // @Override
+    // protected void configure(HttpSecurity http) throws Exception {
+    // http.csrf().disable().authorizeHttpRequests().antMatchers("/person/authenticate")
+    // .permitAll().anyRequest().authenticated().and().sessionManagement()
+    // .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    // http.addFilterBefore(jwtRequestFilter,
+    // UsernamePasswordAuthenticationFilter.class);
+    // }
 }
