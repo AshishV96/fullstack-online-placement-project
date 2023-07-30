@@ -24,7 +24,7 @@ public class JobDTO {
         this.jobSalary = job.getJobSalary();
     }
 
-    public Job getJob()
+    public Job get()
     {
         Job job = new Job();
         job.setJobId(this.jobId);

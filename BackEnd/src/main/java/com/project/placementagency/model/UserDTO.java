@@ -1,6 +1,14 @@
 package com.project.placementagency.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -17,7 +25,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserDTO implements UserDetails {
     
     @JsonProperty("userId")
     private Integer userId;
@@ -26,6 +34,7 @@ public class UserDTO {
     private String email;
 
     @JsonProperty("password")
+    @JsonIgnore
     private String password;
 
     @JsonProperty("firstName")
@@ -50,7 +59,7 @@ public class UserDTO {
     private Double contactNo;
 
     @JsonProperty("jobs")
-    private List<JobDTO> jobs;
+    private List<JobDTO> jobs = new ArrayList<>();
 
     public UserDTO(User user)
     {
@@ -64,7 +73,8 @@ public class UserDTO {
         this.address = user.getAddress();
         this.qualification = user.getQualification();
         this.contactNo = user.getContactNo();
-        if(user.getJobs()!=null)user.getJobs().stream().forEach(job->this.jobs.add(new JobDTO(job)));
+        if(user.getJobs()!=null)
+        user.getJobs().stream().forEach(job->this.jobs.add(new JobDTO(job)));
     }
 
     public User get()
@@ -80,9 +90,47 @@ public class UserDTO {
         user.setAddress(this.address);
         user.setQualification(this.qualification);
         user.setContactNo(this.contactNo);
-        if(this.jobs!=null)this.jobs.stream().forEach(job->user.getJobs().add(job.getJob()));
+        if(this.jobs!=null)this.jobs.stream().forEach(job->user.getJobs().add(job.get()));
 
         return user;
+    }
+
+    @JsonIgnore
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        return authorities;
+    }
+
+    @JsonIgnore
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 }

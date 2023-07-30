@@ -3,8 +3,13 @@ package com.project.placementagency.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +18,9 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtil {
+
+    @Autowired
+    private ObjectMapper mapper;
 
     private String SECRET_KEY = "secret";
 
@@ -37,9 +45,10 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails)
+    public String generateToken(UserDetails userDetails) throws JsonProcessingException
     {
         Map<String,Object> claims = new HashMap<>();
+        claims.put("user", mapper.writeValueAsString(userDetails));
         return createToken(claims,userDetails.getUsername());
     }
     private String createToken(Map<String,Object> claims,String subject)

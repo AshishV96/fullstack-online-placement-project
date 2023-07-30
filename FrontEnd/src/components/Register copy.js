@@ -65,8 +65,6 @@ function Register() {
             setSentOTP(true)
             console.log(OTP)
             console.warn(item)
-            // localStorage.setItem("OTP", OTP);
-            // history('/register')
         }
 
         else {

@@ -60,7 +60,7 @@ public class User {
 	@JsonManagedReference
 	@JsonIgnore
 	@OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
-	private List<Job> jobs;
+	private List<Job> jobs = new ArrayList<>();
 	
 //	@ManyToMany(cascade = CascadeType.ALL)
 //	@JoinTable(name = "user_jobs",

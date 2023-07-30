@@ -11,6 +11,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.placementagency.JobportalApplication;
 import com.project.placementagency.dao.UserRepository;
 import com.project.placementagency.model.AppliedJobs;
+import com.project.placementagency.model.AuthenticationRequest;
+import com.project.placementagency.model.AuthenticationResponse;
 import com.project.placementagency.model.Employer;
 import com.project.placementagency.model.Job;
 import com.project.placementagency.model.ResponseString;
@@ -32,6 +38,7 @@ import com.project.placementagency.model.UserDTO;
 import com.project.placementagency.model.UserStatus;
 import com.project.placementagency.service.EmailSenderService;
 import com.project.placementagency.service.UserService;
+import com.project.placementagency.util.JwtUtil;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +46,12 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private JwtUtil jwtTokenUtil;
 
 	@Autowired
 	private UserService service;
@@ -60,6 +73,22 @@ public class UserController {
 		session.setAttribute("OTP", passwordEncoder.encode(OTP.toString()));
 		return OTP;
 	}
+
+	@PostMapping("login")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception
+    {
+        try
+        {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+        }
+        catch (BadCredentialsException e) {
+            throw new Exception("Incorrent username or password",e);
+        }
+        final UserDetails userDetails = service.loadUserByUsername(authenticationRequest.getUsername());
+        final String jwt = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    }
 
 	@GetMapping("/sendOTP")
 	public ResponseEntity<?> sendEmail(@RequestParam(name = "mailId") String mailId, HttpSession session)
@@ -117,6 +146,7 @@ public class UserController {
 				// return new ResponseEntity<ResponseString>(new
 				// ResponseString(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Invalid Email"),
 				// HttpStatus.INTERNAL_SERVER_ERROR);
+				System.out.println(e.getMessage());
 				return new ResponseEntity<String>("Invalid Email", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
@@ -144,16 +174,16 @@ public class UserController {
 			return new ResponseEntity<String>("Invalid OTP", HttpStatus.BAD_REQUEST);
 	}
 
-	@GetMapping("/login")
-	public ResponseEntity<?> login(@RequestBody UserDTO userDetails) {
-		System.out.println("update controller function got input as " + userDetails.getEmail() + "and password");
+	// @GetMapping("/login")
+	// public ResponseEntity<?> login(@RequestBody UserDTO userDetails) {
+	// 	System.out.println("update controller function got input as " + userDetails.getEmail() + "and password");
 		
-		UserDTO userDTO = service.getUser(userDetails);
-		if (userDTO == null)
-			return new ResponseEntity<String>("User not found", HttpStatus.NOT_FOUND);
-		else
-			return new ResponseEntity<UserDTO>(userDTO, HttpStatus.FOUND);
-	}
+	// 	UserDTO userDTO = service.getUser(userDetails);
+	// 	if (userDTO == null)
+	// 		return new ResponseEntity<String>("User not found", HttpStatus.NOT_FOUND);
+	// 	else
+	// 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.FOUND);
+	// }
 
 	@GetMapping("/getAppliedJobs/{uid}")
 	public ResponseEntity<List<AppliedJobs>> getAppliedJobs(@PathVariable("uid") int uid) {
@@ -216,6 +246,12 @@ public class UserController {
 
 		}
 		return repo.getAppliedJobs(uid);
+	}
+
+	@GetMapping("print")
+	public String print()
+	{
+		return "Authentication Successfull";
 	}
 
 	// @PostMapping("/addUserJob/{uid}/{jid}")

@@ -2,6 +2,7 @@ import { Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
+import { tokenName } from "../token/tokenManager";
 
 function Login() {
 
@@ -9,20 +10,19 @@ function Login() {
     const [password, setPassword] = useState("");
     const [path, setPath] = useState("/user/get/");
     const history = useNavigate();
-    const [result,setResult] = useState({});
-
-    const [reqOTP, setReqOTP] = useState("")
 
     const [selected, setSelected] = useState('/user');
-    const locStore = (selected === '/user') ? 'user-info' : (selected === '/admin') ? 'admin-info' : 'employer-info'
+    // const locStore = (selected === '/user') ? 'user-token' : (selected === '/admin') ? 'admin-token' : 'employer-token'
 
     var display = (selected === '/user') ? 'inline' : 'none'
 
     useEffect(() => {
-        if (localStorage.getItem(locStore)) {
-            history(selected)
+        let role = localStorage.getItem(tokenName);
+        if (role) {
+            (JSON.parse(role).user)?history("/user"):(JSON.parse(role).admin)
+            ?history("/admin"):(JSON.parse(role).employer)?history("/employer"):history("/login")
         }
-    }, [locStore, history, selected])
+    }, [ history])
 
     const handleChange = event => {
         setSelected(event.target.value);
@@ -34,66 +34,19 @@ function Login() {
             alert("Please Enter Data")
             return
         }
-        // console.warn(item, path, selected)
-
-
-        let response = await fetch(path + email + "/" + password, {
-            method: 'GET',
+       
+        let response = await fetch ("/user/login",{
+            method: "GET",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type":"application/json",
+                "Authorization": "Bearer ",
                 "Accept": "application/json"
-            },
-        });
-
-        setResult(await response.json())
-
-        if (response.ok) {
-
-            let OTP = Math.floor(100000 + Math.random() * 900000)
-
-            let res = await fetch("/user/send?mailId=" + email, {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: OTP
-            });
-
-            if (res.ok)
-                alert("OTP sent")
-
-            localStorage.setItem("OTP", OTP);
-
-            history('/login')
-        }
-
-        else if(!response.ok)
-        {
-            alert('Invalid Email or Password')
-            return
-        }
-    }
-
-    const submit = () => {
-
-        if (reqOTP === localStorage.getItem('OTP')) {
-            localStorage.setItem(locStore, JSON.stringify(result))
-            // console.warn("result:", result)
-            var name = JSON.parse(localStorage.getItem('user-info')).user.firstName
-            alert("Welcome " + name)
-            history(selected)
-        }
-
-        else
-            alert('Invalid OTP')
-
+            }
+        })
     }
 
 
-    if (!localStorage.getItem('OTP'))
         return (
-
             <><Header />
                 <div className="col-sm-4 offset-sm-4">
                     <Card className="App" style={{ marginTop: 20, padding: 20, backgroundColor: "lightgrey" }}>
@@ -128,21 +81,6 @@ function Login() {
             </>
         );
 
-    else
-        return (
-            <><Header />
-                <div className="col-sm-4 offset-sm-4">
-                    <Card className="App" style={{ marginTop: 20, padding: 20, backgroundColor: "lightgrey" }}>
-                        <h2>Enter OTP</h2>
-                        <input type="number" value={reqOTP} onChange={(e) => setReqOTP(e.target.value)} placeholder="Enter OTP" className="form-control" />
-                        <br />
-                        <div>
-                            <Button onClick={submit}>Submit</Button>
-                        </div>
-                    </Card>
-                </div>
-            </>
-        );
 }
 
 export default Login

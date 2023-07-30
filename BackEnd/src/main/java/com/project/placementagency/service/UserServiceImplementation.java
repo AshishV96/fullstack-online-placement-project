@@ -46,12 +46,11 @@ public class UserServiceImplementation implements UserService {
 
 		Optional<User> x = repo.findOneByEmailIgnoreCase(userDetails.getEmail());
 		if (x.isPresent()) {
-			if(passwordEncoder.matches(userDetails.getPassword(), x.get().getPassword()))
-			return new UserDTO(x.get());
+			if (passwordEncoder.matches(userDetails.getPassword(), x.get().getPassword()))
+				return new UserDTO(x.get());
 			else
-			return null;
-		}
-		else
+				return null;
+		} else
 			return null;
 
 	}
@@ -115,8 +114,16 @@ public class UserServiceImplementation implements UserService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'loadUserByUsername'");
+		User user = repo.findOneByEmailIgnoreCase(email).get();
+		System.out.println(user);
+		if (user != null)
+			{
+				UserDTO userdto = new UserDTO(user);
+				userdto.setPassword(user.getPassword());
+				return userdto;
+			}
+		else
+			throw new UsernameNotFoundException("Bad Credentials");
 	}
 
 }
