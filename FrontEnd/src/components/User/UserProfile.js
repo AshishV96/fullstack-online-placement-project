@@ -5,13 +5,14 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
 import UserNav from "./UserNav"
+import { getBody } from '../../token/tokenManager';
 
 
 function UserProfile() {
 
     // let response = fetch('/user/get')
-    var userInfo = JSON.parse(localStorage.getItem('user-info'))
-    var user = userInfo.user;
+    // var userInfo = JSON.parse(localStorage.getItem('user-info'))
+    var user = JSON.parse(getBody().user);
     var address = ["---", "---", "---", "---"]
     if (user.address != null) {
         address = user.address.split(" ,, ");

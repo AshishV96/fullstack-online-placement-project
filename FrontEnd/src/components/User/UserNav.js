@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from 'react-router-dom';
+import { getBody } from '../../token/tokenManager';
 
 
 
@@ -11,7 +12,7 @@ function UserNav() {
 
     
     const history = useNavigate();
-    var name = JSON.parse(localStorage.getItem('user-info')).user.firstName
+    var name = JSON.parse(getBody().user).firstName
 
     function logout() {
 

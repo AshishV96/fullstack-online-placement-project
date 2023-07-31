@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
 import UserNav from "./UserNav"
+import { getBody } from '../../token/tokenManager';
 
 
 function UserProfileUpdate() {
@@ -14,8 +15,8 @@ function UserProfileUpdate() {
     // let response = fetch('/user/get')
     // var userInfo = JSON.parse(localStorage.getItem('user-info'))
     // var user = JSON.stringify(userInfo.user)
-    var userInfo = JSON.parse(localStorage.getItem('user-info'))
-    var user = userInfo.user;
+    // var userInfo = JSON.parse(localStorage.getItem('user-info'))
+    var user = JSON.parse(getBody().user);
     var addressIn = ["", "", "", ""]
     if (user.address != null) {
         addressIn = user.address.split(" ,, ");

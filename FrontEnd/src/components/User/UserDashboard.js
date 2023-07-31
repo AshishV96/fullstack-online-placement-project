@@ -8,43 +8,70 @@ import { useEffect, useState } from "react";
 function UserDashboard() {
 
     // const [token, setToken] = useState('')
-    const [user, setUser] = useState()
-    const [appJobs,setAppJobs] = useState()
+    // const [user, setUser] = useState()
+    // const [appJobs,setAppJobs] = useState()
+    const [userPresent,setUserPresent] = useState(true)
     const history = useNavigate();
+
+    useEffect(()=>{
+        alert('Please Login Again')
+            history('/')
+    },[userPresent])
 
     const token = getToken()
     // console.log(token)
     let body = getBody()
+    console.log(body)
+
+    if(body==null)
+    setUserPresent(false)
+
+    useEffect(()=>{
+        alert('Please Login Again')
+            history('/')
+    },[userPresent])
+
+    // function check() {
+    //     if (body == null || body.user == null) {
+    //         alert('Please Login Again')
+    //         history('/')
+    //     }
+    // }
     // console.log(body)
-    // useEffect(()=>{if (body==null||body.user==null) {
-    //     alert('Please Login Again')
-    //     history('/')
-    // }},[body])
 
     // if (body==null) {
-        //     alert('Please Login Again')
-        //     history('/')
-        // }
-        console.log(body.user)
-    setUser(JSON.parse(body.user))
+    //     alert('Please Login Again')
+    //     history('/')
+    // }
+    // console.log(body.user)
+    let user = JSON.parse(body.user)
+    //  console.log(user)
 
-    let response = fetch('/user/getAppliedJobs/' + user.userId, {
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": "Bearer " + token
-        },
-    });
+    let appJobs;
 
-    let result = response.json();
-    
-    if (response.ok) {
-       setAppJobs(result) 
+    async function getAppliedJobs() {
+        let response = await fetch('/user/getAppliedJobs/' + user.userId, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+            },
+        });
+
+        let result = response
+        if (response.ok) {
+            localStorage.setItem('applied-jobs', JSON.stringify(result.json()))
+        }
     }
 
+    useEffect(() => { getAppliedJobs() }, [])
+
+    appJobs = localStorage.getItem('applied-jobs')
+
+
     return (
-        (!response.ok) ?
+        (!localStorage.getItem('applied-jobs')) ?
             (
                 <><UserNav />
                     <div className="col-sm-8 offset-sm-2">

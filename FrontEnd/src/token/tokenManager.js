@@ -21,7 +21,6 @@ export function getBody() {
     if (token != null)
         {
             let decrypted = jwt_decode('.' + decryptToken(token).split('.')[1] + '.')
-            console.log(decrypted)
             return decrypted
         }
 
