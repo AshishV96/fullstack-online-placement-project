@@ -1,62 +1,20 @@
-import React, { useState } from "react";
-import { Button, Card } from "react-bootstrap";
-import Header from "./Header";
 
-function Test() {
+import jwt_decode from "jwt-decode"
 
-    const [OTP,setOTP] = useState('')
-    const [reqOTP,setReqOTP] = useState('')
-    const [sentOTP, setSentOTP] = useState(false);
+export default function Test() {
 
-    function signUp() {
-        const gen = Math.floor(100000 + Math.random() * 900000).toString()
-        console.log(gen)
-        alert('sentOTP')
-        setSentOTP(true)
-        setOTP(gen)
-        console.log(OTP)
-        localStorage.setItem('OTP',OTP)
-    }
-
-    function submit() {
-        console.log('OTP:',OTP)
-        console.log('reqOTP:',reqOTP)
-        if(OTP===reqOTP)
-        alert('Correct')
-    }
+  let token = "eyJzdWIiOiJhdmNoYW5kYW4xQGdtYWlsLmNvbSIsImV4cCI6MTY5MDc4MzA2OSwidXNlciI6IntcInVzZXJJZFwiOjEwLFwiZW1haWxcIjpcImF2Y2hhbmRhbjFAZ21haWwuY29tXCIsXCJmaXJzdE5hbWVcIjpcIkFzaGlzaFwiLFwibGFzdE5hbWVcIjpcIlZlcm1hXCIsXCJhZ2VcIjpudWxsLFwiZ2VuZGVyXCI6bnVsbCxcImFkZHJlc3NcIjpudWxsLFwicXVhbGlmaWNhdGlvblwiOm51bGwsXCJjb250YWN0Tm9cIjpudWxsLFwiam9ic1wiOltdfSIsImlhdCI6MTY5MDc4MjQ2OX0"
+  localStorage.setItem('token',token)
+  let object = jwt_decode('.'+localStorage.getItem('token')+'.')
+  console.log(JSON.parse(object.user).firstName)
+  if(object.admin!=null)
+  console.log(true)
 
 
-
-    return (
-        !sentOTP ?
-            (
-                <><Header />
-                    <div className="col-sm-4 offset-sm-4">
-                        <Card className="App" style={{ marginTop: 20, padding: 20, backgroundColor: "lightgrey" }}>
-                            <h2 style={{ marginBottom: 40 }}>User Sign Up</h2>
-                            <div>
-                                <Button onClick={signUp}>Sign Up</Button>
-                            </div>
-                        </Card>
-                    </div>
-                </>
-            )
-            :
-            (<><Header />
-                <div className="col-sm-4 offset-sm-4">
-                    <Card className="App" style={{ marginTop: 20, padding: 20, backgroundColor: "lightgrey" }}>
-                        <h2>Enter OTP</h2>
-                        <input type="number" value={reqOTP} onChange={(e) => setReqOTP(e.target.value)} placeholder="Enter OTP" className="form-control" />
-                        <br />
-                        <div>
-                            <Button onClick={submit}>Submit</Button>
-                        </div>
-                    </Card>
-                </div>
-            </>
-            )
-    )
-
+  return (
+    <div>
+      <h1>Hello CodeSandbox</h1>
+      <h2>Start editing to see some magic happen!</h2>
+    </div>
+  );
 }
-
-export default Test

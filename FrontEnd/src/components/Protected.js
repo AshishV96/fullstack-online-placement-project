@@ -1,15 +1,26 @@
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { getBody } from "../token/tokenManager";
 function Protected(props) {
     
     let Cmp = props.Cmp
+    let role = props.role
     const history = useNavigate();
     
-    useEffect(() => {
-        if(!localStorage.getItem('user-info'))
+    useEffect((role) => {
+        let body = getBody()
+        if(body!=null)
         {
-            history("/")
+            if(role==='user'&&body.user==null)
+            history('/')
+            if(role==='admin'&&body.admin==null)
+            history('/')
+            if(role==='employer'&&body.employer==null)
+            history('/')
         }
+        else    
+            history('/')
+        
     }, [])
 
     return (

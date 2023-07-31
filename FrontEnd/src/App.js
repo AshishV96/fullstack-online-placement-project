@@ -26,8 +26,8 @@ function App() {
       <Route path ="/forgetPassword" element={<ForgetPassword />} />
       <Route path ="/register" element={<Register />} />
       <Route path ="/test" element={<Test />} />
-      <Route path ="/user" element={<Protected Cmp={UserDashboard} />} />
-      {/* <Route path ="/user/OTP" element={<OTPPage/>} /> */}
+      {/* <Route path ="/user" element={<Protected Cmp={UserDashboard} role='user' />} /> */}
+      <Route path ="/user" element={<UserDashboard/>} />
       <Route path ="/user/profile" element={<Protected Cmp={UserProfile} />}/>
       <Route path ="/user/profile/update" element={<Protected Cmp={UserProfileUpdate} />}/>
       <Route path ="/user/jobs" element={<JobList />} />

@@ -94,7 +94,7 @@ public class UserController {
 	public ResponseEntity<?> sendEmail(@RequestParam(name = "mailId") String mailId, HttpSession session)
 			throws MessagingException {
 				String email = session.getAttribute("mailId").toString();
-		if (email==null||email.equals(mailId)) {
+		if (email!=null&&email.equals(mailId)) {
 			Integer OTP = this.otpGenerator(session);
 			mailSender.sendEmail(mailId, "OTP to register to the portal",
 					"OTP to register to the portal is " + String.valueOf(OTP));

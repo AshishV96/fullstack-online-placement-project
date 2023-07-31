@@ -17,19 +17,25 @@ export function decryptToken(token) {
 }
 
 export function getBody() {
-    if ((token = localStorage.getItem(tokenName)) != null)
-        return jwt_decode('.' + decryptToken(token).split('.')[1] + '.')
+    let token = localStorage.getItem(tokenName)
+    if (token != null)
+        {
+            let decrypted = jwt_decode('.' + decryptToken(token).split('.')[1] + '.')
+            console.log(decrypted)
+            return decrypted
+        }
 
     else
         return null
 }
 
-export function setToken(token) {
+export function saveToken(token) {
     localStorage.setItem(tokenName, encryptToken(token))
 }
 
 export function getToken() {
-    if ((token = localStorage.getItem(tokenName)) != null)
+    let token = localStorage.getItem(tokenName);
+    if (token!= null)
         return decryptToken(token)
 
     else
