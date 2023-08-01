@@ -16,6 +16,7 @@ import Test from './components/Test';
 import { getBody } from './token/tokenManager';
 
 function App() {
+
   return (
     <div>
       <Router>
@@ -27,7 +28,7 @@ function App() {
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/register" element={<Register />} />
           <Route path="/test" element={<Test />} />
-          <Route path="/user" element={<Protected Cmp={UserDashboard} present={(getBody())&&(getBody().user)} url = '/user' />} />
+          <Route path="/user" element={<Protected Cmp={UserDashboard} present={(getBody())&&(getBody().user)} />} />
           {/* <Route path ="/user" element={<UserDashboard/>} /> */}
           <Route path="/user/profile" element={<Protected Cmp={UserProfile} present={(getBody())&&(getBody().user)} />} />
           <Route path="/user/profile/update" element={<Protected Cmp={UserProfileUpdate} />} />

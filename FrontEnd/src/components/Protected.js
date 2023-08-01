@@ -4,7 +4,7 @@ import { getBody } from "../token/tokenManager";
 
 function Protected(props) {
 
-    const history = useNavigate();
+    // const history = useNavigate();
     // let url = props.url
     // windowlocation.reload()
     // useEffect(()=>location.reload,[])
@@ -31,6 +31,8 @@ function Protected(props) {
     // setComp(props.Cmp)
     // console.log(present)
     
+    // for(let i =1;i<10;i++)
+    // console.log(pres)     
 
     return (
         (pres) ?
