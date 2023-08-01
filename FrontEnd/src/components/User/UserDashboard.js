@@ -10,26 +10,26 @@ function UserDashboard() {
     // const [token, setToken] = useState('')
     // const [user, setUser] = useState()
     // const [appJobs,setAppJobs] = useState()
-    const [userPresent,setUserPresent] = useState(true)
+    // let userPresent = true
     const history = useNavigate();
 
-    useEffect(()=>{
-        alert('Please Login Again')
-            history('/')
-    },[userPresent])
+    // useEffect(()=>{
+    //     alert('Please Login Again')
+    //         history('/')
+    // },[userPresent])
 
     const token = getToken()
     // console.log(token)
     let body = getBody()
     console.log(body)
 
-    if(body==null)
-    setUserPresent(false)
+    // if(body==null)
+    // userPresent = false
 
-    useEffect(()=>{
-        alert('Please Login Again')
-            history('/')
-    },[userPresent])
+    // useEffect(()=>{
+    //     alert('Please Login Again')
+    //         history('/')
+    // },[userPresent])
 
     // function check() {
     //     if (body == null || body.user == null) {

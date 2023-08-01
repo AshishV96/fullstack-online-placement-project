@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter as Router,Routes,Route} from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Login from './components/Login'
 import Register from './components/Register'
 import Caro from './components/Caro';
@@ -13,25 +13,26 @@ import JobList from './components/User/JobList';
 import ParentComponent from './test/ParentComponent';
 import ChildComponent from './test/ChildComponent';
 import Test from './components/Test';
+import { getBody } from './token/tokenManager';
 
 function App() {
   return (
     <div>
       <Router>
-      <Routes>
-      <Route path ="/parent" element={<ParentComponent/>} />
-      <Route path ="/child" element={<ChildComponent/>} />
-      <Route path ="/" element={<Caro/>} />
-      <Route path ="/login" element={<Login />} />
-      <Route path ="/forgetPassword" element={<ForgetPassword />} />
-      <Route path ="/register" element={<Register />} />
-      <Route path ="/test" element={<Test />} />
-      {/* <Route path ="/user" element={<Protected Cmp={UserDashboard} role='user' />} /> */}
-      <Route path ="/user" element={<UserDashboard/>} />
-      <Route path ="/user/profile" element={<Protected Cmp={UserProfile} />}/>
-      <Route path ="/user/profile/update" element={<Protected Cmp={UserProfileUpdate} />}/>
-      <Route path ="/user/jobs" element={<JobList />} />
-      </Routes>
+        <Routes>
+          <Route path="/parent" element={<ParentComponent />} />
+          <Route path="/child" element={<ChildComponent />} />
+          <Route path="/" element={<Caro />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgetPassword" element={<ForgetPassword />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/test" element={<Test />} />
+          <Route path="/user" element={<Protected Cmp={UserDashboard} present={(getBody())&&(getBody().user)} url = '/user' />} />
+          {/* <Route path ="/user" element={<UserDashboard/>} /> */}
+          <Route path="/user/profile" element={<Protected Cmp={UserProfile} present={(getBody())&&(getBody().user)} />} />
+          <Route path="/user/profile/update" element={<Protected Cmp={UserProfileUpdate} />} />
+          <Route path="/user/jobs" element={<JobList />} />
+        </Routes>
       </Router>
     </div>
   );

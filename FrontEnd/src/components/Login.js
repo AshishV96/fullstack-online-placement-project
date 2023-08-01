@@ -2,13 +2,18 @@ import { Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
-import { getBody, getToken, saveToken, tokenName } from "../token/tokenManager";
+import { getBody, getToken, saveToken, } from "../token/tokenManager";
 
 function Login() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [newPass, setNewPass] = useState('')
     const [path, setPath] = useState("/user/login");
+    const [isActive, setIsActive] = useState(false)
+    const [OTP,setOTP] = useState('')
+    const [otpSent,setOtpSent] = useState(false)
+
     // const [client, setClient] = useState();
     const history = useNavigate();
 
@@ -18,9 +23,10 @@ function Login() {
     var display = (selected === '/user') ? 'inline' : 'none'
 
     useEffect(() => {
-        let role = localStorage.getItem(tokenName);
+        let role = getBody()
+        // console.log(role)
         if (role) {
-            (JSON.parse(role).user) ? history("/user") : (JSON.parse(role).admin)
+            (role.user) ? history("/user") : (role.admin)
                 ? history("/admin") : history("/employer")
         }
     }, [history])
@@ -53,54 +59,100 @@ function Login() {
             saveToken(token.jwt)
             let role = getBody()
             alert("Login Successfull")
-            if (role.user != null) { 
+            if (role.user != null) {
                 history("/user")
-             }
-            else if (role.admin != null) { 
+            }
+            else if (role.admin != null) {
                 history("/admin")
             }
-            else if (role.employer != null) {  
+            else if (role.employer != null) {
                 history("/employer")
             }
-
         }
+        else if (response.status === 403)
+            alert('Bad Credentials')
+
+        else
+            alert('Something went wrong')
 
     }
 
 
     return (
-        <><Header />
-            <div className="col-sm-4 offset-sm-4">
-                <Card className="App" style={{ marginTop: 20, padding: 20, backgroundColor: "lightgrey" }}>
-                    <h2>Log In</h2>
-                    <div>
-                        <label style={{ margin: 10 }}>
-                            <input type="radio" name="path" value="/admin" checked={selected === '/admin'}
-                                onChange={handleChange} onClick={() => setPath('/admin/login')} />
-                            Admin
-                        </label>
-                        <label style={{ margin: 10 }}>
-                            <input type="radio" name="path" value="/employer" checked={selected === '/employer'}
-                                onChange={handleChange} onClick={() => setPath('/employer/login')} />
-                            Employer
-                        </label>
-                        <label style={{ margin: 10 }}>
-                            <input type="radio" name="path" value="/user" checked={selected === '/user'}
-                                onChange={handleChange} onClick={() => setPath('/user/login')} />
-                            User
-                        </label>
+
+        (!isActive) ? (
+            <><Header />
+                <div className="col-sm-4 offset-sm-4">
+                    <Card className="App" style={{ marginTop: 20, padding: 20, backgroundColor: "lightgrey" }}>
+                        <h2>Log In</h2>
+                        <div>
+                            <label style={{ margin: 10 }}>
+                                <input type="radio" name="path" value="/admin" checked={selected === '/admin'}
+                                    onChange={handleChange} onClick={() => setPath('/admin/login')} />
+                                Admin
+                            </label>
+                            <label style={{ margin: 10 }}>
+                                <input type="radio" name="path" value="/employer" checked={selected === '/employer'}
+                                    onChange={handleChange} onClick={() => setPath('/employer/login')} />
+                                Employer
+                            </label>
+                            <label style={{ margin: 10 }}>
+                                <input type="radio" name="path" value="/user" checked={selected === '/user'}
+                                    onChange={handleChange} onClick={() => setPath('/user/login')} />
+                                User
+                            </label>
+                        </div>
+                        <input type="email" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Email" className="form-control" />
+                        <br />
+                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password" className="form-control" />
+                        <br />
+                        <div>
+                            <Button onClick={LogIn}>LogIn</Button>
+                            <Button style={{ marginLeft: 10, display: display }} onClick={ ()=>setIsActive(true) }>Forget Password</Button>
+                        </div>
+                    </Card>
+                </div>
+            </>
+        )
+            :
+            (
+                (!otpSent)?
+                (<><Header />
+                    <div className="col-sm-4 offset-sm-4">
+                        <Card style={{ marginTop: 20, padding: 20, backgroundColor: "lightgrey" }}>
+                            <h2 style={{ marginBottom: 40 }}>Reset Password</h2>
+                            <div>
+                                <input type="email" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Email" className="form-control" />
+                                <br />
+                            </div>
+                            <div>
+                                <Button onClick={()=>setOtpSent(true)}>Submit</Button>
+                                <Button style={{ marginLeft: 10 }} onClick={()=>setIsActive(false)}>Back</Button>
+                            </div>
+                        </Card>
                     </div>
-                    <input type="email" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Email" className="form-control" />
-                    <br />
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password" className="form-control" />
-                    <br />
-                    <div>
-                        <Button onClick={LogIn}>LogIn</Button>
-                        <Button style={{ marginLeft: 10, display: display }} onClick={() => { history('/forgetPassword') }}>Forget Password</Button>
+                </>):
+                (
+                <><Header />
+                    <div className="col-sm-4 offset-sm-4">
+                        <Card style={{ marginTop: 20, padding: 20, backgroundColor: "lightgrey" }}>
+                            <h2 style={{ marginBottom: 40 }}>Reset Password</h2>
+                            <div>
+                                <input type="password" value={newPass} onChange={(e) => setNewPass(e.target.value)} placeholder="Enter New Password" className="form-control" />
+                                <br />
+                                <input type="number" value={OTP} onChange={(e) => setOTP(e.target.value)} placeholder="Enter OTP" className="form-control" />
+                                <br />
+                            </div>
+                            <div>
+                                <Button >Reset Password</Button>
+                                <Button style={{ marginLeft: 10 }} onClick={()=>setOtpSent(false)}>Back</Button>
+                            </div>
+                        </Card>
                     </div>
-                </Card>
-            </div>
-        </>
+                </>
+                )
+            )
+
     );
 
 }

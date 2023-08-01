@@ -1,32 +1,50 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getBody } from "../token/tokenManager";
+
 function Protected(props) {
-    
-    let Cmp = props.Cmp
-    let role = props.role
+
     const history = useNavigate();
+    // let url = props.url
+    // windowlocation.reload()
+    // useEffect(()=>location.reload,[])
+    // const [pres,setPres] = useState();
+    // const [Comp,setComp] = useState();
+
+    // let body = getBody()
+    // console.log(body)
+
+    // if (body!=null) {
+    //     if (!(body.user) || !(body.admin) || !(body.employer))
+    //         history('/')
+    // }
+    // else
+    //     history('/')
+
+    // useEffect(()=>{
+    //     if(!present)
+    //     history('/')
+    // })
+    let pres = props.present
+    let Comp = props.Cmp
+    // setPres(props.present)
+    // setComp(props.Cmp)
+    // console.log(present)
     
-    useEffect((role) => {
-        let body = getBody()
-        if(body!=null)
-        {
-            if(role==='user'&&body.user==null)
-            history('/')
-            if(role==='admin'&&body.admin==null)
-            history('/')
-            if(role==='employer'&&body.employer==null)
-            history('/')
-        }
-        else    
-            history('/')
-        
-    }, [])
 
     return (
-        <div>
-            <Cmp/>
-        </div>
+        (pres) ?
+            (
+                <div>
+                    <Comp />
+                </div>
+            )
+            :
+            (
+                <div>
+                    <h2>Go to home</h2>
+                </div>
+            )
     )
 }
 
