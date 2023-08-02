@@ -4,7 +4,7 @@ import { getBody } from "../token/tokenManager";
 
 function Protected(props) {
 
-    // const history = useNavigate();
+    const history = useNavigate();
     // let url = props.url
     // windowlocation.reload()
     // useEffect(()=>location.reload,[])
@@ -25,28 +25,28 @@ function Protected(props) {
     //     if(!present)
     //     history('/')
     // })
-    let pres = props.present
+    const pres = React.useMemo(() => { return props.present })
     let Comp = props.Cmp
     // setPres(props.present)
     // setComp(props.Cmp)
     // console.log(present)
-    
-    // for(let i =1;i<10;i++)
-    // console.log(pres)     
+
 
     return (
-        (pres) ?
+        <React.Suspense fallback={<h2>Loading</h2>}>
+            {(pres) ?
             (
-                <div>
-                    <Comp />
-                </div>
+            <div>
+                <Comp />
+            </div>
             )
             :
             (
-                <div>
-                    <h2>Go to home</h2>
-                </div>
-            )
+            <div>
+                <h2>Go to home</h2>
+            </div>
+            )}
+        </React.Suspense>
     )
 }
 
