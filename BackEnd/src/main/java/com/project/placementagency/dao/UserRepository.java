@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.placementagency.model.AppliedJobs;
 import com.project.placementagency.model.Employer;
@@ -63,6 +64,11 @@ public interface UserRepository extends CrudRepository<User, Integer>{
 	
 	@Query(value = "select * from user where first_name = 'Ashish'", nativeQuery = true)
 	public List<User> allUser();
+
+	@Modifying
+	@Transactional
+	@Query(value = "update user u set u.password = ?2 where u.email = ?1",nativeQuery = true)
+   	public Integer changePassword(String email,String newPassword);
 	
 //	@Modifying
 //	@Query(value = "insert into user (first_name,last_name,email,password) values ('dolly','teotia','dolly@gmail.com',4455)", nativeQuery = true)

@@ -116,14 +116,20 @@ public class UserServiceImplementation implements UserService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user = repo.findOneByEmailIgnoreCase(email).get();
 		System.out.println(user);
-		if (user != null)
-			{
-				UserDTO userdto = new UserDTO(user);
-				userdto.setPassword(user.getPassword());
-				return userdto;
-			}
-		else
+		if (user != null) {
+			UserDTO userdto = new UserDTO(user);
+			userdto.setPassword(user.getPassword());
+			return userdto;
+		} else
 			throw new UsernameNotFoundException("Bad Credentials");
+	}
+
+	@Override
+	public boolean resetPassword(String email, String newPassword) {
+		if (repo.changePassword(email, passwordEncoder.encode(newPassword)) != 0)
+			return true;
+		else
+			return false;
 	}
 
 }

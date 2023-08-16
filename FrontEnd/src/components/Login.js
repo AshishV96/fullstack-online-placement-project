@@ -8,7 +8,7 @@ function Login() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [newPass, setNewPass] = useState('')
+    // const [newPass, setNewPass] = useState('')
     const [path, setPath] = useState("/user/login");
     const [isActive, setIsActive] = useState(false)
     const [OTP,setOTP] = useState('')
@@ -77,6 +77,69 @@ function Login() {
 
     }
 
+    async function submit() {
+
+        setPassword('')
+
+        if (username.length === 0) {
+            alert("Please Enter email")
+            return
+        }
+
+        let response = await fetch("user/forgetPassword?mailId="+username, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+
+        if(response.ok)
+        {
+            alert(await response.text())
+            setOtpSent(true)
+        }
+        else if(response.status===400||response.status===500)
+            alert(await response.text())
+            
+        else
+            alert('Something went wrong')
+
+    }
+
+    async function resetPassword() {
+
+        let item = { username, password } 
+
+        if (OTP.length === 0 || password.length === 0) {
+            alert("Please fill all fields")
+            return
+        }
+
+        let response = await fetch("user/resetPassword/"+OTP, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body : JSON.stringify(item)
+        })
+
+        if(response.ok)
+        {
+            alert(await response.text())
+            setOtpSent(false)
+            setIsActive(false)
+            setUsername('')
+            setPassword('')
+        }
+        else if(response.status===400||response.status===500)
+            alert(await response.text())
+            
+        else
+            alert('Something went wrong')
+
+    }
 
     return (
 
@@ -126,7 +189,7 @@ function Login() {
                                 <br />
                             </div>
                             <div>
-                                <Button onClick={()=>setOtpSent(true)}>Submit</Button>
+                                <Button onClick={submit}>Submit</Button>
                                 <Button style={{ marginLeft: 10 }} onClick={()=>setIsActive(false)}>Back</Button>
                             </div>
                         </Card>
@@ -138,13 +201,13 @@ function Login() {
                         <Card style={{ marginTop: 20, padding: 20, backgroundColor: "lightgrey" }}>
                             <h2 style={{ marginBottom: 40 }}>Reset Password</h2>
                             <div>
-                                <input type="password" value={newPass} onChange={(e) => setNewPass(e.target.value)} placeholder="Enter New Password" className="form-control" />
+                                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter New Password" className="form-control" />
                                 <br />
                                 <input type="number" value={OTP} onChange={(e) => setOTP(e.target.value)} placeholder="Enter OTP" className="form-control" />
                                 <br />
                             </div>
                             <div>
-                                <Button >Reset Password</Button>
+                                <Button onClick={resetPassword} >Reset Password</Button>
                                 <Button style={{ marginLeft: 10 }} onClick={()=>setOtpSent(false)}>Back</Button>
                             </div>
                         </Card>

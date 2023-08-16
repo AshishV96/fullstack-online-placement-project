@@ -36,6 +36,8 @@ public class SecurityConfigurer {
 
         http.csrf(c -> c.disable())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/user/add/*").permitAll()
+                        .requestMatchers("user/forgetPassword").permitAll()
+                        .requestMatchers("user/resetPassword/*").permitAll()
                         .requestMatchers("/user/sendOTP").permitAll()
                         .requestMatchers("/user/check/*").permitAll()
                         .requestMatchers("/user/login").permitAll()

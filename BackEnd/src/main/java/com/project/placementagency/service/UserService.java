@@ -33,6 +33,8 @@ public interface UserService extends UserDetailsService {
 
 	@Override
 	UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
+
+    boolean resetPassword(String username, String newPassword);
 	
 //	UserStatus addUserJob(int uid, int jid);
 		

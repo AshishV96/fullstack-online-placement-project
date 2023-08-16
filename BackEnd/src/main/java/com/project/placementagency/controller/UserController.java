@@ -112,14 +112,29 @@ public class UserController {
 		{
 			session.setAttribute("mailId", mailId);
 			try {
-				this.sendEmail(mailId, session);
-				return new ResponseEntity<String>("OTP sent", HttpStatus.OK);
+				return this.sendEmail(mailId, session);
 			} catch (Exception e) {
 				return new ResponseEntity<String>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		else
 			return new ResponseEntity<String>("Email not registered", HttpStatus.BAD_REQUEST);
+	}
+
+	@PutMapping("/resetPassword/{OTP}")
+	public ResponseEntity<String> resetPassword(@PathVariable String OTP,@RequestBody AuthenticationRequest user,HttpSession session)
+	{
+		String email = session.getAttribute("mailId").toString();
+		String storedOTP = session.getAttribute("OTP").toString();
+		if (email!=null&&email.equals(user.getUsername())&&passwordEncoder.matches(OTP, storedOTP))
+		{
+			if(service.resetPassword(user.getUsername(),user.getPassword()))
+				return new ResponseEntity<String>("Password changed successfully, Please Login again",HttpStatus.OK);
+			else
+				return new ResponseEntity<String>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		else
+			return new ResponseEntity<String>("Invalid OTP",HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping("/check/{email}")
